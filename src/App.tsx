@@ -22,18 +22,19 @@ const allQuestion = [
   "きのう は なに を しましたか",
   "だいがく まで どうやって いきますか。",
   "バンコク は どんな まち ですか。",
-  "〜さん の へや は どんな へや ですか。",
-  "〜さん は どんな ひと ですか。",
+  "〜さん の へや は どんな へや ですか。(Two Adjectives)",
+  "〜さん は どんな ひと ですか。(Two Adjectives)",
   "〜さん、ひるごはん を たべ に いきませんか。",
   "いらっしゃいませ！ごちゅうもん は？",
-  ". (after the meal, you want to pay the bill separately) ３０００えん です。",
-  "we are friends. のど が かわきましたね。",
+  "(after the meal, you want to pay the bill separately) ３０００えん です。",
+  "(we are friends) のど が かわきましたね。",
   "にもつ が おおい ですね。もちましょうか。",
   "go straight and turn left (right) at the traffic light. stop in the front of that flower shop.",
   "(at the immigration control) パスポートを みせてください。",
   "すみません。ちょっと おかね を かしてください。",
-  "You want to take a photo but don't know if you can do that. Ask for permission. use a computer",
-  "You want to take a photo but don't know if you can do that. Ask for permission. use a pen"
+  "You want to take a photo but don't know if you can do that. Ask for permission",
+  "You want to use a computer but don't know if you can do that. Ask for permission",
+  "You want to use a pen but don't know if you can do that. Ask for permission"
 ]
 
 function App() {
