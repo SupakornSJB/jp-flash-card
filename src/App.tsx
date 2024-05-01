@@ -37,23 +37,116 @@ const allQuestion = [
   "You want to use a pen but don't know if you can do that. Ask for permission"
 ]
 
+const allVocabQuestions = [
+  "かきます",
+  "ききます",
+  "はたらきます",
+  "いきます",
+  "およぎます",
+  "いそぎます",
+  "のみます",
+  "よみます",
+  "やすみます",
+  "あそびます",
+  "よびます",
+  "かいます",
+  "すいます",
+  "あいます",
+  "ならいます",
+  "もらいます",
+  "てつだいます",
+  "まちます",
+  "もちます",
+  "とります",
+  "きります",
+  "あります",
+  "かえります",
+  "おわります",
+  "おくります",
+  "わかります",
+  "かかります",
+  "はいります",
+  "まがります",
+  "けします",
+  "かします",
+  "だします",
+  "はなします",
+  "ねます",
+  "でます",
+  "たべます",
+  "あげます",
+  "かけます",
+  "つけます",
+  "あけます",
+  "みせます",
+  "おしえます",
+  "むかえます",
+  "つかれます",
+  "しめます",
+  "とめます",
+  "はじめます",
+  "みます",
+  "います",
+  "おきます",
+  "かります",
+  "おります",
+  "あびます",
+  "できます",
+  "たります",
+  "します",
+  "べんきょうします",
+  "けっこんします",
+  "かいものします",
+  "しょくじします",
+  "さんぽします",
+  "コピーします",
+  "きます",
+  "もってきます",
+  "つれてきます",
+]
+
 function App() {
   const [count, setCount] = useState<number>(0);
-  const randomWord = useMemo(() => allQuestion[Math.floor(Math.random() * (allQuestion.length))], [count])
+  const [vocabMode, setVocabMode] = useState<boolean>(false);
+  const randomWord = useMemo(() => {
+    if (!vocabMode)
+      return allQuestion[Math.floor(Math.random() * (allQuestion.length))]
+    return allVocabQuestions[Math.floor(Math.random() * (allVocabQuestions.length))]
+  }, [count, vocabMode])
 
   return (
     <div className='w-full h-screen'>
       <div className="flex items-center justify-center h-full">
         <div className="flex flex-col gap-3 border-2 rounded max-w-7xl w-5/6 lg:w-2/5 p-10 sm:w-4/5 ">
-          <div className='font-bold text-3xl flex justify-center'>
-            {randomWord}
-          </div>
+          {
+            !vocabMode &&
+            <div className='font-bold text-3xl flex justify-center'>
+              {randomWord}
+            </div>
+          }
+          {
+            vocabMode &&
+            <div className='text-xl flex justify-center items-center flex-col gap-2'>
+              {vocabMode && <p>Meaning, Group, and Te form?</p>}
+              <p className="text-3xl font-bold">
+                {randomWord}
+              </p>
+            </div>
+          }
+
           <span className="font-thin m-auto">
-            Number: {count+1}
+            Number: {count + 1}
           </span>
-          <button onClick={() => setCount((current) => current + 1)} className="btn btn-primary max-w-60 m-auto">
-            Next Question
-          </button>
+          <div className="flex justify-center">
+            <div className="flex gap-2 flex-col sm:flex-row">
+              <button onClick={() => setCount((current) => current + 1)} className="btn btn-primary max-w-60 m-auto">
+                Next Question
+              </button>
+              <button className='btn-neutral btn max-w-60 m-auto' onClick={() => setVocabMode((prev) => !prev)}>
+                {vocabMode ? "Switch to sentence" : "Switch to Vocab"}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div >
