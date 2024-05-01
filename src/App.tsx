@@ -139,11 +139,11 @@ function App() {
           </span>
           <div className="flex justify-center">
             <div className="flex gap-2 flex-col sm:flex-row">
-              <button onClick={() => setCount((current) => current + 1)} className="btn btn-primary max-w-60 m-auto">
-                Next Question
-              </button>
               <button className='btn-neutral btn max-w-60 m-auto' onClick={() => setVocabMode((prev) => !prev)}>
                 {vocabMode ? "Switch to sentence" : "Switch to Vocab"}
+              </button>
+              <button onClick={() => setCount((current) => current + 1)} className="btn btn-primary max-w-60 m-auto">
+                Next Question
               </button>
             </div>
           </div>
