@@ -26,9 +26,11 @@ const TUTORIAL_LIST: ITutorialDetail[] = [
     title: "Legacy Version",
     description: [
       <div className="inline" key="Legacy 1">
-        <span>Please click</span> {" "}
-        <a className="text-blue-500 underline" href="/#/legacy">here</a>{" "}
-        <span>for the legacy version</span>
+        <form method="dialog">
+          <span>Please click</span> {" "}
+          <a className="text-blue-500 underline" href={import.meta.env.BASE_URL + "#/legacy"}>Here</a>{" "}
+          <span>for the legacy version</span>
+        </form>
       </div>
     ],
   },
