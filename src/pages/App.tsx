@@ -6,7 +6,7 @@ import { useRootContext } from "./Root";
 
 const App: React.FC = () => {
   const [ready, error, wordList, fileHandler, reset] = useJsonWordList();
-  const { isRandom, onReadyStateChange, hasScheduleReset, setHasScheduleReset, ..._ } = useRootContext();
+  const { isRandom, onReadyStateChange, hasScheduleReset, setHasScheduleReset } = useRootContext();
 
   useEffect(() => {
     onReadyStateChange(ready);

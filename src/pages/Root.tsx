@@ -1,3 +1,5 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import React, { useMemo, useState } from "react";
 import { Outlet, useLocation, useOutletContext } from 'react-router';
 import { Link } from "react-router-dom";
