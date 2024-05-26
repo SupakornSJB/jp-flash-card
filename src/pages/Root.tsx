@@ -24,8 +24,11 @@ const Root: React.FC = () => {
   const [isSettingOpen, setIsSettingOpen] = useState<boolean>(false);
   const [hasScheduleReset, setHasScheduleReset] = useState<boolean>(false);
   const location = useLocation();
-  const showCurrentLink = useMemo<boolean>(() =>
-    location.pathname === import.meta.env.BASE_URL + "legacy", [location])
+  const showCurrentLink = useMemo<boolean>(() => {
+    // location.pathname === import.meta.env.BASE_URL + "legacy", [location]
+    return location.pathname === "/legacy";
+  }, [location]
+  )
 
   const onReadyStateChange = (state: boolean) => {
     setIsResettable(state);
@@ -70,7 +73,7 @@ const Root: React.FC = () => {
             <div className="footer footer-center p-10">
               <span className="inline pointer-events-auto">
                 You are currently using the legacy version, Click {" "}
-                <Link to={import.meta.env.BASE_URL} className="underline text-blue-500">
+                <Link to="" className="underline text-blue-500">
                   Here
                 </Link>
                 {" "} to go to the current version

@@ -2,13 +2,13 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './pages/App.tsx'
 import './index.css'
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { RouterProvider, createHashRouter } from "react-router-dom";
 import LegacyApp from './pages//LegacyApp.tsx';
 import Root from './pages/Root.tsx';
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
-    path: import.meta.env.BASE_URL,
+    path: '/',
     element: <Root />,
     children: [
       {
