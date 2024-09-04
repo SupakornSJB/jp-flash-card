@@ -108,18 +108,18 @@ export const useGREMultiList = (): { info: IGreListInfo, current: IGreListCurren
     setCount(0);
   }, [isRandom])
 
-  const loadQuestionSet = (set: IGreJson[]) => {
-    setQuestionEnableState((prev) => {
-      const objCopy = { set: { ...prev.state.set } };
-      for (let setName of set) {
-        objCopy.set[setName.setName] = true;
-      }
-      return {
-        state: objCopy,
-        nameOfEnabledSet: [...prev.nameOfEnabledSet, ...set.map((s) => s.setName)]
-      }
-    })
-  }
+  // const loadQuestionSet = (set: IGreJson[]) => {
+  //   setQuestionEnableState((prev) => {
+  //     const objCopy = { set: { ...prev.state.set } };
+  //     for (let setName of set) {
+  //       objCopy.set[setName.setName] = true;
+  //     }
+  //     return {
+  //       state: objCopy,
+  //       nameOfEnabledSet: [...prev.nameOfEnabledSet, ...set.map((s) => s.setName)]
+  //     }
+  //   })
+  // }
 
   const toggleSet = (setName: string) => {
     setQuestionEnableState((prev) => {

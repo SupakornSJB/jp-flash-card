@@ -3,7 +3,7 @@ import { useGREMultiList } from "../hooks/useGREMultiList";
 import { GRESelectSetModal } from "../components/GRESelectSetModal";
 
 export const GREPage: React.FC = () => {
-  const { util, info, current } = useGREMultiList();
+  const { util, current } = useGREMultiList();
   const [isShowingAnswer, setIsShowingAnswer] = useState<boolean>();
   const [isSettingModalOpen, setIsSettingModalOpen] = useState<boolean>(false);
 
