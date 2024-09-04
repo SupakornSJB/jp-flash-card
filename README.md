@@ -3,6 +3,9 @@
 - [Legacy JP Flash Card](https://supakornsjb.github.io/jp-flash-card/#/legacy)
 - [GRE (wip - Needs more vocabs sets)](https://supakornsjb.github.io/jp-flash-card/#/gre)
 
+# Todo
+- Color is broken on Light theme
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
