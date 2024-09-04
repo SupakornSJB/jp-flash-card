@@ -1,5 +1,17 @@
 import { useState } from "react";
 
+// csv format
+
+// text format 1
+// comma separated
+// text format 2
+// \n separated
+
+// json format 1
+// words: string[]
+// json format 2
+// string[]
+
 const useJsonWordList = ():
   [ready: boolean, error: boolean, words: string[] | null, fileHandler: (file: File | null) => void, reset: () => void] => {
   let fileReader: FileReader;
@@ -16,12 +28,27 @@ const useJsonWordList = ():
     setError(false);
     setReady(false);
     fileReader = new FileReader();
-    fileReader.onloadend = handleFileRead;
+
+    switch (getFileExtension(file.name)) {
+      case "txt":
+        fileReader.onloadend = handleTextFileRead;
+        break;
+      case "json":
+        fileReader.onloadend = handleJsonFileRead;
+        break;
+      case "csv":
+        fileReader.onloadend = handleCSVFileRead;
+        break;
+      default:
+        setError(true);
+        setReady(false);
+        return;
+    }
     fileReader.readAsText(file);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleFileRead = async (_: ProgressEvent<FileReader>) => {
+  const handleJsonFileRead = async (_: ProgressEvent<FileReader>) => {
     let content = fileReader.result;
     if (content === null) {
       setError(true);
@@ -48,6 +75,26 @@ const useJsonWordList = ():
     }
   }
 
+  const handleTextFileRead = async (_: ProgressEvent<FileReader>) => {
+    let content = fileReader.result;
+    if (content === null) {
+      setError(true);
+      return;
+    }
+
+    throw ("Not implemented");
+  }
+
+  const handleCSVFileRead = async (_: ProgressEvent<FileReader>) => {
+    let content = fileReader.result
+    if (content === null) {
+      setError(true);
+      return;
+    }
+
+    throw ("Not implemented");
+  }
+
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const checkDataType = (jsonResult: any): boolean => {
     if (jsonResult && jsonResult.words) {
@@ -62,6 +109,11 @@ const useJsonWordList = ():
       }
     }
     return false;
+  }
+
+  const getFileExtension = (fileName: string) => {
+    const parts = fileName.split(".");
+    return parts[parts.length - 1];
   }
 
   const reset = () => {

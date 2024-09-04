@@ -10,13 +10,13 @@ const App: React.FC = () => {
 
   useEffect(() => {
     onReadyStateChange(ready);
-  }, [ready])
+  }, [ready, onReadyStateChange])
 
   useEffect(() => {
     if (!hasScheduleReset) return;
     reset();
     setHasScheduleReset(false);
-  }, [reset, hasScheduleReset])
+  }, [reset, hasScheduleReset, setHasScheduleReset])
 
   return (
     <>

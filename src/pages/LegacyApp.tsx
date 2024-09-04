@@ -28,7 +28,6 @@ const LegacyApp: React.FC = () => {
           </p>
         </div>
       }
-
       <span className="font-thin m-auto">
         Number: {count + 1}
       </span>

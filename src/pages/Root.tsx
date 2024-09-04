@@ -25,7 +25,6 @@ const Root: React.FC = () => {
   const [hasScheduleReset, setHasScheduleReset] = useState<boolean>(false);
   const location = useLocation();
   const showCurrentLink = useMemo<boolean>(() => {
-    // location.pathname === import.meta.env.BASE_URL + "legacy", [location]
     return location.pathname === "/legacy";
   }, [location]
   )

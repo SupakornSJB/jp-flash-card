@@ -5,6 +5,7 @@ import './index.css'
 import { RouterProvider, createHashRouter } from "react-router-dom";
 import LegacyApp from './pages//LegacyApp.tsx';
 import Root from './pages/Root.tsx';
+import { GREPage } from './pages/GRE.tsx';
 
 const router = createHashRouter([
   {
@@ -18,6 +19,10 @@ const router = createHashRouter([
       {
         path: "legacy",
         element: <LegacyApp />,
+      },
+      {
+        path: "gre",
+        element: <GREPage />,
       },
     ]
   }
