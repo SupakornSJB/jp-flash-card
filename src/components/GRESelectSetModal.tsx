@@ -1,5 +1,4 @@
-import { useEffect, useRef } from "react"
-// import HelpLogo from "./../assets/help-circle-outline.svg?react";
+import { useEffect, useMemo, useRef } from "react"
 import SettingLogo from "./../assets/settings-outline.svg?react";
 import { useGREMultiList } from "../hooks/useGREMultiList";
 
@@ -11,6 +10,9 @@ interface GRESelectSetModalProps {
 export const GRESelectSetModal: React.FC<GRESelectSetModalProps> = (props) => {
   const modalRef = useRef<HTMLDialogElement>(null);
   const { util, info } = useGREMultiList();
+  const nameOfDisableSelectSet = useMemo(() =>
+    info.nameOfEnabledSet.length === 1
+      ? info.nameOfEnabledSet[0] : "", [info.nameOfEnabledSet])
 
   const handleCloseModal = () => {
     props.setIsOpen(false);
@@ -44,7 +46,13 @@ export const GRESelectSetModal: React.FC<GRESelectSetModalProps> = (props) => {
                 <div className="flex gap-1 items-center">
                   <span>{setName}</span>
                 </div>
-                <input type="checkbox" className="toggle toggle-success" onChange={() => util.toggleSet(setName)} checked={enabled} />
+                <input
+                  type="checkbox"
+                  className="toggle toggle-success"
+                  onChange={() => util.toggleSet(setName)}
+                  checked={enabled}
+                  disabled={setName === nameOfDisableSelectSet}
+                />
               </div>
             ))
           }
