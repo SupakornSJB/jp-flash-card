@@ -58,9 +58,13 @@ export const GRESelectSetModal: React.FC<GRESelectSetModalProps> = (props) => {
           }
         </div>
         <div className="modal-action mt-3 items-center">
-          <p className="font-thin text-sm">
-            Press "Next Question" for the change to take effect
-          </p>
+          {
+            /*
+            <p className="font-thin text-sm">
+              Press "Next Question" for the change to take effect
+            </p>
+              */
+          }
           <button className="btn btn-neutral" onClick={handleCloseModal}>
             Close
           </button>
