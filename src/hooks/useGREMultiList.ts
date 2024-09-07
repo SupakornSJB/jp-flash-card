@@ -1,8 +1,21 @@
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useContext, useMemo, useState, useRef } from "react";
 import set1List from "./../../src/gre_set_1.json";
+import set2List from "./../../src/gre_set_2.json";
 import { useRootContext } from "../pages/Root";
+import { createContext } from "react";
 
-const ASSET_LIST = [set1List]
+export const EnabledSetListContext = createContext<[string[], React.Dispatch<React.SetStateAction<string[]>>]>([[], () => { }])
+
+export const ASSET_LIST = [set1List, set2List]
+export const ASSET_OBJ = ASSET_LIST
+  .reduce<{ [setName: string]: IGreJson }>((accumulator, currentAsset) => {
+    if (currentAsset.words.length !== currentAsset.translations.length)
+      console.error(`Word List Length (${currentAsset.words.length}) 
+                    and Translation List Length (${currentAsset.translations.length}) 
+                    of '${currentAsset.setName}' is not equal`)
+    accumulator[currentAsset.setName] = currentAsset
+    return accumulator;
+  }, {})
 
 export interface IGreJson {
   setName: string,
@@ -10,20 +23,12 @@ export interface IGreJson {
   translations: string[]
 }
 
-export interface IGreListInfo {
-  state: {
-    set: {
-      [setName: string]: boolean
-    }
-  },
-  nameOfEnabledSet: string[]
-}
-
 export interface IGreListCurrentQuestionDetail {
   questionNumber: number;
   question: string,
   answer: string,
   setName: string,
+  count: number,
 }
 
 export interface IGreListUtil {
@@ -31,110 +36,80 @@ export interface IGreListUtil {
   toggleSet: (setName: string) => void;
 }
 
-export const useGREMultiList = (): { info: IGreListInfo, current: IGreListCurrentQuestionDetail, util: IGreListUtil } => {
+export const useGREMultiList = (): { enabled: string[], current: IGreListCurrentQuestionDetail, util: IGreListUtil } => {
   const { isRandom } = useRootContext();
   const [count, setCount] = useState(0);
-  const [questionEnableState, setQuestionEnableState]
-    = useState<IGreListInfo>({
-      state: {
-        set: ASSET_LIST.reduce<{ [setName: string]: boolean }>((accumulator, currentSet) => {
-          accumulator[currentSet.setName] = true;
-          return accumulator;
-        }, {})
-      },
-      nameOfEnabledSet: ASSET_LIST.map((asset) => asset.setName)
-    })
+  const [questionEnableState, setQuestionEnableState] = useContext(EnabledSetListContext);
 
-  const questionSet = useMemo<{
-    set: {
-      [setName: string]: { word: string, translation: string }[],
-    },
-    numberOfQuestionForEachSet: {
-      [setName: string]: number;
-    },
-    totalQuestionNumber: number;
-  }>(() => {
-    const currentList: { [setName: string]: { word: string, translation: string }[] } = {}
-    const numberOfQuestionForEachSet: { [setName: string]: number } = {};
-    let totalQuestionNumber = 0;
-    ASSET_LIST.forEach((asset) => {
-      if (!questionEnableState.state.set[asset.setName]) return;
-      if (asset.words.length !== asset.translations.length)
-        console.warn(`Words List Length (${asset.words.length}) and Translation List Length (${asset.translations.length}) of set ${asset.setName} is not equal.`)
-      currentList[asset.setName] = asset.words.map((word, index) => ({ word, translation: asset.translations[index] }))
-      numberOfQuestionForEachSet[asset.setName] = asset.words.length;
-      totalQuestionNumber += asset.words.length;
-    })
-    return { set: currentList, numberOfQuestionForEachSet, totalQuestionNumber }
-  }, [questionEnableState])
+  const getQuestion = (setName: string, questionNumber: number) => (
+    {
+      question: ASSET_OBJ[setName].words[questionNumber],
+      answer: ASSET_OBJ[setName].translations[questionNumber],
+      setName,
+      questionNumber,
+    }
+  )
 
-  const previous = useRef({ questionNumber: -1, setName: ASSET_LIST[0].setName });
-  const current = useMemo<IGreListCurrentQuestionDetail>(() => {
+  const previouslyRandom = useRef(isRandom);
+  const previousCount = useRef(count);
+  const previous = useRef(getQuestion(ASSET_LIST[0].setName, 0))
+
+  // This current memo turns out to be a lot more complicated than I wanted lol
+  const current = useMemo(() => {
+    let nextQuestionNumber: number;
+    let nextSetName: string;
+    let resetQuestion = false;
+
     if (isRandom) {
-      const randomSetName = questionEnableState.nameOfEnabledSet[Math.floor(Math.random() * questionEnableState.nameOfEnabledSet.length)];
-      const randomQuestionNumber = Math.floor(Math.random() * questionSet.numberOfQuestionForEachSet[randomSetName]);
-      const randomQuestion = questionSet.set[randomSetName][randomQuestionNumber];
-      return {
-        question: randomQuestion.word,
-        answer: randomQuestion.translation,
-        setName: randomSetName,
-        questionNumber: randomQuestionNumber,
-      }
+      nextSetName = questionEnableState[Math.floor(Math.random() * questionEnableState.length)];
+      nextQuestionNumber = Math.floor(Math.random() * ASSET_OBJ[nextSetName].words.length);
+      previouslyRandom.current = true;
     } else {
-      let nextQuestionNumber: number = previous.current.questionNumber + 1;
-      let nextSetName: string = previous.current.setName;
-      if (nextQuestionNumber >= questionSet.numberOfQuestionForEachSet[previous.current.setName]) {
-        nextQuestionNumber = 0;
-        const nextSetNameIndex = questionEnableState.nameOfEnabledSet.indexOf(nextSetName) + 1;
-        if (nextSetNameIndex >= questionEnableState.nameOfEnabledSet.length) {
-          nextSetName = questionEnableState.nameOfEnabledSet[0];
-        } else {
-          nextSetName = questionEnableState.nameOfEnabledSet[nextSetNameIndex]
-        }
-      }
-      previous.current.setName = nextSetName;
-      previous.current.questionNumber = nextQuestionNumber;
+      nextSetName = previous.current.setName;
+      nextQuestionNumber = previous.current.questionNumber;
 
-      return {
-        questionNumber: nextQuestionNumber,
-        setName: nextSetName,
-        question: questionSet.set[nextSetName][nextQuestionNumber].word,
-        answer: questionSet.set[nextSetName][nextQuestionNumber].translation
+      if (previousCount.current !== count) nextQuestionNumber++;
+      if (questionEnableState.includes(nextSetName)) {
+        if (nextQuestionNumber >= ASSET_OBJ[nextSetName].words.length) {
+          nextQuestionNumber = 0;
+          const nextSetNameIndex = questionEnableState.indexOf(nextSetName) + 1;
+          nextSetName = questionEnableState[nextSetNameIndex >= questionEnableState.length ? 0 : nextSetNameIndex];
+        }
+      } else
+        resetQuestion = true;
+
+      if (previouslyRandom.current) {
+        previouslyRandom.current = false;
+        resetQuestion = true;
+      }
+
+      if (resetQuestion) {
+        nextSetName = questionEnableState[0];
+        nextQuestionNumber = 0;
       }
     }
-  }, [count, questionEnableState, questionSet, isRandom])
 
-  useEffect(() => {
-    setCount(0);
-  }, [isRandom])
-
-  // const loadQuestionSet = (set: IGreJson[]) => {
-  //   setQuestionEnableState((prev) => {
-  //     const objCopy = { set: { ...prev.state.set } };
-  //     for (let setName of set) {
-  //       objCopy.set[setName.setName] = true;
-  //     }
-  //     return {
-  //       state: objCopy,
-  //       nameOfEnabledSet: [...prev.nameOfEnabledSet, ...set.map((s) => s.setName)]
-  //     }
-  //   })
-  // }
+    const currentQuestion = getQuestion(nextSetName, nextQuestionNumber);
+    previous.current = currentQuestion;
+    previousCount.current = count;
+    return getQuestion(nextSetName, nextQuestionNumber)
+  }, [isRandom, count, questionEnableState])
 
   const toggleSet = (setName: string) => {
     setQuestionEnableState((prev) => {
-      const objCopy = { set: { ...prev.state.set } };
-      objCopy.set[setName] = !objCopy.set[setName];
-      const numberOfEnabledSet = Object.entries(objCopy.set)
-        .reduce<string[]>((enabledSetNameArr, [setName, enabled]) => {
-          if (enabled) {
-            enabledSetNameArr.push(setName)
-          }
-          return enabledSetNameArr;
-        }, [])
-      return { state: objCopy, nameOfEnabledSet: numberOfEnabledSet };
+      let arrCopy = [...prev];
+      if (prev.includes(setName))
+        arrCopy = arrCopy.filter((prevSetName) => prevSetName !== setName);
+      else {
+        arrCopy.push(setName);
+        arrCopy.sort((item1, item2) => {
+          const index1 = ASSET_LIST.findIndex((value) => value.setName === item1);
+          const index2 = ASSET_LIST.findIndex((value) => value.setName === item2);
+          return index1 - index2
+        })
+      }
+      return arrCopy;
     })
-    setCount(0);
   }
 
   const nextQuestion = () => {
@@ -142,8 +117,11 @@ export const useGREMultiList = (): { info: IGreListInfo, current: IGreListCurren
   }
 
   return {
-    info: questionEnableState,
-    current,
+    enabled: questionEnableState,
+    current: {
+      ...current,
+      count
+    },
     util: {
       next: nextQuestion,
       toggleSet,

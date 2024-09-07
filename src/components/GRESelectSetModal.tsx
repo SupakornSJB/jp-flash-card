@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from "react"
 import SettingLogo from "./../assets/settings-outline.svg?react";
-import { useGREMultiList } from "../hooks/useGREMultiList";
+import { ASSET_LIST, useGREMultiList } from "../hooks/useGREMultiList";
 
 interface GRESelectSetModalProps {
   isOpen: boolean;
@@ -9,10 +9,10 @@ interface GRESelectSetModalProps {
 
 export const GRESelectSetModal: React.FC<GRESelectSetModalProps> = (props) => {
   const modalRef = useRef<HTMLDialogElement>(null);
-  const { util, info } = useGREMultiList();
+  const { util, enabled } = useGREMultiList();
   const nameOfDisableSelectSet = useMemo(() =>
-    info.nameOfEnabledSet.length === 1
-      ? info.nameOfEnabledSet[0] : "", [info.nameOfEnabledSet])
+    enabled.length === 1
+      ? enabled[0] : "", [enabled])
 
   const handleCloseModal = () => {
     props.setIsOpen(false);
@@ -32,16 +32,16 @@ export const GRESelectSetModal: React.FC<GRESelectSetModalProps> = (props) => {
         <div className='modal-top'>
           <div className="flex items-center gap-2">
             <SettingLogo className="h-8 w-8" />
-            <h3 className="font-bold text-2xl">Setting</h3>
+            <h3 className="font-bold text-2xl">Select Set</h3>
           </div>
           <button
             className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
             onClick={handleCloseModal}
           >✕</button>
         </div>
-        <div>
+        <div className="my-3">
           {
-            Object.entries(info.state.set).map(([setName, enabled]) => (
+            ASSET_LIST.map(({ setName }) => (
               <div key={setName} className="flex justify-between py-2 items-center">
                 <div className="flex gap-1 items-center">
                   <span>{setName}</span>
@@ -50,14 +50,17 @@ export const GRESelectSetModal: React.FC<GRESelectSetModalProps> = (props) => {
                   type="checkbox"
                   className="toggle toggle-success"
                   onChange={() => util.toggleSet(setName)}
-                  checked={enabled}
+                  checked={enabled.includes(setName)}
                   disabled={setName === nameOfDisableSelectSet}
                 />
               </div>
             ))
           }
         </div>
-        <div className="modal-action mt-3">
+        <div className="modal-action mt-3 items-center">
+          <p className="font-thin text-sm">
+            Press "Next Question" for the change to take effect
+          </p>
           <button className="btn btn-neutral" onClick={handleCloseModal}>
             Close
           </button>
