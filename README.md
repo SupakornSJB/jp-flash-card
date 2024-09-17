@@ -1,7 +1,11 @@
 # Accessing Different Page
 - [Current (wip - Tutorial, etc.)](https://supakornsjb.github.io/jp-flash-card/#/gre)
 - [Legacy JP Flash Card](https://supakornsjb.github.io/jp-flash-card/#/legacy)
-- [GRE (wip - Needs more vocabs sets)](https://supakornsjb.github.io/jp-flash-card/#/gre)
+- [GRE flashcard](https://supakornsjb.github.io/jp-flash-card/#/gre)
+- [GRE word list set 1](https://supakornsjb.github.io/jp-flash-card/#/list/1)
+- [GRE word list set 2](https://supakornsjb.github.io/jp-flash-card/#/list/2)
+- [GRE word list set 3](https://supakornsjb.github.io/jp-flash-card/#/list/3)
+- [GRE word list set 4](https://supakornsjb.github.io/jp-flash-card/#/list/4)
 
 # Todo
 - Color is broken on Light theme
