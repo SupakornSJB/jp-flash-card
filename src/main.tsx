@@ -5,6 +5,7 @@ import { RouterProvider, createHashRouter } from "react-router-dom";
 import LegacyApp from './pages//LegacyApp.tsx';
 import Root from './pages/Root.tsx';
 import { GREPage } from './pages/GRE.tsx';
+import List from './pages/List.tsx';
 
 const router = createHashRouter([
   {
@@ -24,6 +25,10 @@ const router = createHashRouter([
         element: <GREPage />,
       },
     ]
+  },
+  {
+    path: "/list/:setName",
+    element: <List />
   }
 ])
 
