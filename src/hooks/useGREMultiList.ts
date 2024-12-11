@@ -3,12 +3,13 @@ import set1List from "./../../src/gre_set_1.json";
 import set2List from "./../../src/gre_set_2.json";
 import set3List from "./../../src/gre_set_3.json";
 import set4List from "./../../src/gre_set_4.json";
+import interviewList from "./../../src/gre_test.json";
 import { useRootContext } from "../pages/Root";
 import { createContext } from "react";
 
 export const EnabledSetListContext = createContext<[string[], React.Dispatch<React.SetStateAction<string[]>>]>([[], () => { }])
 
-export const ASSET_LIST = [set1List, set2List, set3List, set4List]
+export const ASSET_LIST = [set1List, set2List, set3List, set4List, interviewList];
 export const ASSET_OBJ = ASSET_LIST
   .reduce<{ [setName: string]: IGreJson }>((accumulator, currentAsset) => {
     if (currentAsset.words.length !== currentAsset.translations.length)
